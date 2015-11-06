@@ -151,7 +151,7 @@ Run specific tests only
 ```
 node tests/specs # run unit tests
 node tests/specs/check # run .check() unit tests
-node tests/integration/walktrough # run walktrough integration test
+node tests/integration/walkthrough # run walkthrough integration test
 # PROTIP™ Pipe output through a [pretty reporter](https://www.npmjs.com/package/tape#pretty-reporters)
 ```
 
