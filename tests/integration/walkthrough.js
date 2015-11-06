@@ -3,7 +3,7 @@ var test = require('tape')
 
 var ConnectionStatus = require('../../index')
 
-test('Walktrough', function (t) {
+test('Walkthrough', function (t) {
   t.plan(5)
 
   var serverMock = nock('https://example.com')

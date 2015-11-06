@@ -1,3 +1,3 @@
 require('./instance')
 require('./cache')
-require('./walktrough')
+require('./walkthrough')
