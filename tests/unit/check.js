@@ -56,8 +56,8 @@ test('check() with 500 response', function (t) {
   })
 
   var emitter = new EventEmitter()
-  emitter.on('disconnected', function () {
-    t.pass('"disconnected" event emitted')
+  emitter.on('disconnect', function () {
+    t.pass('"disconnect" event emitted')
   })
 
   var state = {
@@ -182,8 +182,8 @@ test('check() with 200 response when state.error is set', function (t) {
   simple.mock(check.internals.cache, 'set').callFn(function () {})
   simple.mock(check.internals, 'nets').callbackWith(null, {})
   var emitter = new EventEmitter()
-  emitter.on('reconnected', function () {
-    t.pass('"reconnected" event emitted')
+  emitter.on('reconnect', function () {
+    t.pass('"reconnect" event emitted')
   })
 
   var state = {
