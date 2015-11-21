@@ -16,8 +16,8 @@ https://github.com/hoodiehq/hoodie-client/issues/6
 ```js
 var connectionStatus = new ConnectionStatus('https://example.com/ping')
 
-connectionStatus.on('disconnected', showOfflineNotification)
-connectionStatus.on('reconnected reset', hideOfflineNotification)
+connectionStatus.on('disconnect', showOfflineNotification)
+connectionStatus.on('reconnect reset', hideOfflineNotification)
 
 myOtherRemoteApiThing.on('error', connectionStatus.check)
 ```
@@ -51,7 +51,7 @@ Example
 ```js
 var connectionStatus = new ConnectionStatus('https://example.com/ping')
 
-connectionStatus.on('disconnected', showOfflineNotification)
+connectionStatus.on('disconnect', showOfflineNotification)
 connectionStatus.check()
 ```
 
@@ -109,9 +109,9 @@ connectionStatus.reset(options).then(function () {
 
 ### Events
 
-- 'disconnected'  
+- 'disconnect'  
   Triggered if ping failed and `connectionStatus.ok` isn’t `false`
-- 'reconnected'  
+- 'reconnect'  
   Triggered if ping succeeded and `connectionStatus.ok` is `false`
 - 'reset'  
   Triggered if `connectionStatus.reset()` called, or cache invalidated
@@ -119,8 +119,8 @@ connectionStatus.reset(options).then(function () {
 Example
 
 ```js
-connectionStatus.on('disconnected', handler)
-connectionStatus.on('reconnected', handler)
+connectionStatus.on('disconnect', handler)
+connectionStatus.on('reconnect', handler)
 connectionStatus.on('reset', handler)
 ```
 
