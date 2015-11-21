@@ -6,6 +6,7 @@ var check = require('./lib/check')
 var getOk = require('./lib/get-ok')
 var on = require('./lib/on')
 var off = require('./lib/off')
+var reset = require('./lib/reset')
 
 var parseOptions = require('./lib/utils/parse-options')
 var getCache = require('./lib/utils/cache').get
@@ -35,6 +36,7 @@ function Connection (options) {
     },
     check: check.bind(null, state),
     on: on.bind(null, state),
-    off: off.bind(null, state)
+    off: off.bind(null, state),
+    reset: reset.bind(null, state)
   }
 }
