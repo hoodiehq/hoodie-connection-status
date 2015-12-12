@@ -7,10 +7,6 @@
 [![Dependency Status](https://david-dm.org/hoodiehq/hoodie-client-connection-status.svg)](https://david-dm.org/hoodiehq/hoodie-client-connection-status)
 [![devDependency Status](https://david-dm.org/hoodiehq/hoodie-client-connection-status/dev-status.svg)](https://david-dm.org/hoodiehq/hoodie-client-connection-status#info=devDependencies)
 
-# THIS IS WORK IN PROGRESS
-
-https://github.com/hoodiehq/hoodie-client/issues/6
-
 ## Example
 
 ```js
