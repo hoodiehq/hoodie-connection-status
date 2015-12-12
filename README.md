@@ -8,9 +8,8 @@
 [![devDependency Status](https://david-dm.org/hoodiehq/hoodie-client-connection-status/dev-status.svg)](https://david-dm.org/hoodiehq/hoodie-client-connection-status#info=devDependencies)
 
 `hoodie-client-connection-status` is a JavaScript library for the browser. It
-allows to check a connection, and emits
-
-
+allows to check a connection, and emits `disconnect` & `reconnect` events if
+the request status changes. Status is persisted in `localStorage`.
 
 ## Example
 
@@ -25,27 +24,104 @@ myOtherRemoteApiThing.on('error', connectionStatus.check)
 
 ## API
 
+- [Constructor](#constructor)
+- [connectionStatus.ok](#connectionstatusok)
+- [connectionStatus.check()](#connectionstatuscheck)
+- [connectionStatus.startChecking()](#connectionstatusstartchecking)
+- [connectionStatus.stopChecking()](#connectionstatusstopchecking)
+- [connectionStatus.reset()](#connectionstatusreset)
+- [Events](#events)
+
 ### Constructor
 
 ```js
-var connectionStatus = new ConnectionStatus(options)
+new ConnectionStatus(options)
 ```
 
-`options` can either be a URL string, or an object with the following keys:
-
-- `url` **_required_** (String)  
-  Full url to send pings to
-- `method` (String, _default: `'HEAD'`_)  
-  Must be valid http verb like `'GET'` or `'POST'` (case insensitive)
-- `interval` (Integer > 0 or Object, _default: undefined_)
-  If set to a number, it will immediately start to send requests to the given
-  URL. Different intervals can be set based on connection status by setting
-  `interval` to an object with `connected` and `disconnected` keys.
-- `cache` (false or Object, _default: { prefix: 'connection_', timeout: undefined }_)  
-  a connection stores it internal state to localStorage (one per URL). If set to false,
-  nothing is persisted. `prefix` (String, _default: 'connection_'_) will be used as the localStorage key
-  prefix, followed by `url`. `timeout` (Number, _default: undefined_) is the time in ms after which a
-  cache shall be invalidated. When invalidated on initialisation, a `reset` event gets triggered on next tick.
+<table>
+  <thead>
+    <tr>
+      <th align="left">Argument</th>
+      <th align="left">Type</th>
+      <th align="left">Description</th>
+      <th align="left">Required</th>
+    </tr>
+  </thead>
+  <tr>
+    <th align="left">options.url</th>
+    <td>String</td>
+    <td>Full url to send pings to</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <th align="left">options.method</th>
+    <td>String</td>
+    <td>
+      Defaults to <em>HEAD</em>. Must be valid http verb like <code>'GET'</code>
+      or <code>'POST'</code> (case insensitive)
+    </td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <th align="left">options.interval</th>
+    <td>Number</td>
+    <td>
+      Interval in ms. If set a request is send immediately. The interval starts
+      after each request response. Can also be set to an object to differentiate
+      intervals by connection status, see below
+    </td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <th align="left">options.interval.connected</th>
+    <td>Number</td>
+    <td>
+      Interval in ms while <code>connectionStatus.ok</code> is not
+      <code>false</code>. If set, a request is send immediately. The
+      interval starts after each request response.<br>
+      🐕 <strong>TO BE DONE</strong>: <a href="https://github.com/hoodiehq/hoodie-client-connection-status/issues/24">#24</a>
+    </td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <th align="left">options.interval.disconnected</th>
+    <td>Number</td>
+    <td>
+      Interval in ms while <code>connectionStatus.ok</code> is
+      <code>false</code>. If set, a request is send immediately. The
+      interval starts after each request response.<br>
+      🐕 <strong>TO BE DONE</strong>: <a href="https://github.com/hoodiehq/hoodie-client-connection-status/issues/24">#24</a>
+    </td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <th align="left">options.cache</th>
+    <td>Object or false</td>
+    <td>
+      Defaults to <code>{ prefix: 'connection_' }</code>.
+      If set to false, nothing is persisted.
+    </td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <th align="left">options.cache.prefix</th>
+    <td>String</td>
+    <td>
+      Defaults to <code>'connection_'</code>. will be used as the localStorage
+      key prefix, followed by <code>options.url</code>
+    </td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <th align="left">options.cache.timeout</th>
+    <td>Number</td>
+    <td>
+      time in ms after which a cache shall be invalidated. When invalidated on
+      initialisation, a <code>reset</code> event gets triggered on next tick.
+    </td>
+    <td>No</td>
+  </tr>
+</table>
 
 Example
 
@@ -56,28 +132,97 @@ connectionStatus.on('disconnect', showOfflineNotification)
 connectionStatus.check()
 ```
 
-### connectionStatus.ok (Boolean, read-only)
+### connectionStatus.ok
 
-- `undefined` if no status yet,
-- `true` last check responded ok
-- `false` if last check failed
+_Read-only_
 
-### connectionStatus.check(options) (Function --> Promise)
+```js
+connectionStatus.ok
+```
 
-- `interval` (Integer > 0 or Object, _default: undefined_)  
-  If set to a number, it will immediately start to send requests to the given
-  URL. Different intervals can be set based on connection status by setting
-  `interval` to an object with `connected` and `disconnected` keys.
-- `timeout` (Integer > 0 or Object, _default: 10000_)  
-  Time in ms after which a ping shall be aborted with a `timeout` error
+- Returns `undefined` if no status yet
+- Returns `true` last check responded ok
+- Returns `false` if last check failed
 
-Promise resolves without value. It rejects with one of the following errors
+The state is persisted in cache.
 
-- `TimeoutError`, `error.status` is `0`
-- `ServerError`, `error.status` is status returned from server
-- `ConnectionError` (Server could not be reached), `error.status` is `undefined`
+### connectionStatus.isChecking
 
-To stop an existing interval, call `connectionStatus.check()` without interval.
+---
+
+🐕 **TO BE DONE**: [#22](https://github.com/hoodiehq/hoodie-client-connection-status/issues/22)
+
+---
+
+_Read-only_
+
+```js
+connectionStatus.isChecking
+```
+
+Returns `true` if connection is checked continuously, otherwise `false`.
+The state is persisted in cache.
+
+### connectionStatus.check(options)
+
+```js
+connectionStatus.check(options)
+```
+
+<table>
+  <thead>
+    <tr>
+      <th align="left">Argument</th>
+      <th align="left">Type</th>
+      <th align="left">Description</th>
+      <th align="left">Required</th>
+    </tr>
+  </thead>
+  <tr>
+    <th align="left">options.timeout</th>
+    <td>Number</td>
+    <td>
+      Time in ms after which a ping shall be aborted with a
+      <code>timeout</code> error
+    </td>
+    <td>No</td>
+  </tr>
+</table>
+
+Resolves without value.
+
+Rejects with:
+
+<table>
+  <thead>
+    <tr>
+      <th align="left">
+        name
+      </th>
+      <th align="left">
+        status
+      </th>
+      <th align="left">
+        message
+      </th>
+    </tr>
+  </thead>
+  <tr>
+    <th align="left">TimeoutError</th>
+    <td>0</td>
+    <td>Connection timeout</td>
+  </tr>
+  <tr>
+    <th align="left">ServerError</th>
+    <td><em>as returned by server</em></td>
+    <td><em>as returned by server</em></td>
+  </tr>
+  <tr>
+    <th align="left">ConnectionError</th>
+    <td><code>undefined</code></td>
+    <td>Server could not be reached</td>
+  </tr>
+</table>
 
 Example
 
@@ -93,10 +238,94 @@ connectionStatus.check()
 })
 ```
 
-### connectionStatus.reset(options) (Function --> Promise)
+### connectionStatus.startChecking(options)
+
+Starts checking connection continuously
+
+```js
+connectionStatus.startChecking(options)
+```
+
+<table>
+  <thead>
+    <tr>
+      <th align="left">Argument</th>
+      <th align="left">Type</th>
+      <th align="left">Description</th>
+      <th align="left">Required</th>
+    </tr>
+  </thead>
+  <tr>
+    <th align="left">options.interval</th>
+    <td>Number</td>
+    <td>
+      Interval in ms. The interval starts after each request response.
+      Can also be set to an object to differentiate interval
+      by connection state, see below
+    </td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <th align="left">options.interval.connected</th>
+    <td>Number</td>
+    <td>
+      Interval in ms while <code>connectionStatus.ok</code> is not
+      <code>false</code>. The interval starts after each request response.<br>
+      🐕 <strong>TO BE DONE</strong>: <a href="https://github.com/hoodiehq/hoodie-client-connection-status/issues/24">#24</a>
+    </td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <th align="left">options.interval.disconnected</th>
+    <td>Number</td>
+    <td>
+      Interval in ms while <code>connectionStatus.ok</code> is
+      <code>false</code>. The interval starts after each request response.<br>
+      🐕 <strong>TO BE DONE</strong>: <a href="https://github.com/hoodiehq/hoodie-client-connection-status/issues/24">#24</a>
+    </td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <th align="left">options.timeout</th>
+    <td>Number</td>
+    <td>
+      Time in ms after which a ping shall be aborted with a
+      <code>timeout</code> error
+    </td>
+    <td>No</td>
+  </tr>
+</table>
+
+Returns `connectionStatus` API
+
+Example
+
+```js
+connectionStatus.startChecking({interval: 30000})
+  .on('disconnect', showOfflineNotification)
+```
+
+### connectionStatus.stopChecking()
+
+Stops checking connection continuously.
+
+```js
+connectionStatus.stopChecking()
+```
+
+Returns `connectionStatus` API
+
+### connectionStatus.reset(options)
 
 Clears status & cache, aborts all pending requests.
-`options` as the same as in [Constructor](#Constructor)
+
+```js
+connectionStatus.reset(options)
+```
+
+`options` is the same as in [Constructor](#constructor)
+
+Resolves without values. Does not reject.
 
 Example
 
@@ -106,21 +335,43 @@ connectionStatus.reset(options).then(function () {
 })
 ```
 
+---
+
+🐕 **TO BE DONE**: [abort pending request](https://github.com/hoodiehq/hoodie-client-connection-status/issues/21)  
+🐕 **TO BE DONE**: [trigger 'reset' event](https://github.com/hoodiehq/hoodie-client-connection-status/issues/20)
+
+---
+
 ### Events
 
-- 'disconnect'  
-  Triggered if ping failed and `connectionStatus.ok` isn’t `false`
-- 'reconnect'  
-  Triggered if ping succeeded and `connectionStatus.ok` is `false`
-- 'reset'  
-  Triggered if `connectionStatus.reset()` called, or cache invalidated
+<table>
+  <tr>
+    <th align="left">disconnect</th>
+    <td>
+      Ping fails and <code>connectionStatus.ok</code> isn’t <code>false</code>
+    </td>
+  </tr>
+  <tr>
+    <th align="left">reconnect</th>
+    <td>
+      Ping succeeds and <code>connectionStatus.ok</code> is <code>false</code>
+    </td>
+  </tr>
+  <tr>
+    <th align="left">reset</th>
+    <td>
+      Cache invalidated on initialisation or
+      <code>connectionStatus.reset()</code> called
+    </td>
+  </tr>
+</table>
 
 Example
 
 ```js
-connectionStatus.on('disconnect', handler)
-connectionStatus.on('reconnect', handler)
-connectionStatus.on('reset', handler)
+connectionStatus.on('disconnect', function () {})
+connectionStatus.on('reconnect', function () {})
+connectionStatus.on('reset', function () {})
 ```
 
 ## Testing
