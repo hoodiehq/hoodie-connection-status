@@ -7,6 +7,11 @@
 [![Dependency Status](https://david-dm.org/hoodiehq/hoodie-client-connection-status.svg)](https://david-dm.org/hoodiehq/hoodie-client-connection-status)
 [![devDependency Status](https://david-dm.org/hoodiehq/hoodie-client-connection-status/dev-status.svg)](https://david-dm.org/hoodiehq/hoodie-client-connection-status#info=devDependencies)
 
+`hoodie-client-connection-status` is a JavaScript library for the browser. It
+allows to check a connection, and emits
+
+
+
 ## Example
 
 ```js
@@ -89,8 +94,6 @@ connectionStatus.check()
 ```
 
 ### connectionStatus.reset(options) (Function --> Promise)
-
-**NOTE: THIS IS TO BE DONE [#1](https://github.com/hoodiehq/hoodie-client-connection-status/issues/1)**
 
 Clears status & cache, aborts all pending requests.
 `options` as the same as in [Constructor](#Constructor)
