@@ -148,12 +148,6 @@ The state is persisted in cache.
 
 ### connectionStatus.isChecking
 
----
-
-🐕 **TO BE DONE**: [#22](https://github.com/hoodiehq/hoodie-client-connection-status/issues/22)
-
----
-
 _Read-only_
 
 ```js
