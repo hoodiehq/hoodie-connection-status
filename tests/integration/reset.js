@@ -53,7 +53,7 @@ test('connection.reset() resets the timestamp', function (t) {
 })
 
 test('connection.reset() resets any errors', function (t) {
-  t.plan(2)
+  t.plan(3)
 
   store.setObject('connection_https://example.com/ping', {
     error: new Error('no soup for you')
@@ -61,6 +61,10 @@ test('connection.reset() resets any errors', function (t) {
 
   var connectionStatus = new ConnectionStatus({
     url: 'https://example.com/ping'
+  })
+
+  connectionStatus.on('reset', function () {
+    t.pass('connectionStatus "reset" event triggered')
   })
 
   t.is(connectionStatus.ok, undefined, 'connection status is in error')
