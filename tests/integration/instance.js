@@ -1,3 +1,4 @@
+var store = require('humble-localstorage')
 var test = require('tape')
 
 var ConnectionStatus = require('../../index')
@@ -17,4 +18,5 @@ test('Instance', function (t) {
   t.is(typeof connectionStatus.off, 'function', 'connectionStatus.off is function')
 
   t.end()
+  store.clear()
 })

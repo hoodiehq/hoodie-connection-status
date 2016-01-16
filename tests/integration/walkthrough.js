@@ -1,9 +1,11 @@
 var nock = require('nock')
+var store = require('humble-localstorage')
 var test = require('tape')
 
 var ConnectionStatus = require('../../index')
 
 test('Walkthrough', function (t) {
+  store.clear()
   t.plan(5)
 
   var serverMock = nock('https://example.com')
