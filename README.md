@@ -329,13 +329,6 @@ connectionStatus.reset(options).then(function () {
 })
 ```
 
----
-
-🐕 **TO BE DONE**: [abort pending request](https://github.com/hoodiehq/hoodie-client-connection-status/issues/21)  
-🐕 **TO BE DONE**: [trigger 'reset' event](https://github.com/hoodiehq/hoodie-client-connection-status/issues/20)
-
----
-
 ### Events
 
 <table>
