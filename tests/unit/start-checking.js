@@ -2,7 +2,7 @@ var lolex = require('lolex')
 var simple = require('simple-mock')
 var test = require('tape')
 
-var startChecking = require('../../lib/startChecking')
+var startChecking = require('../../lib/start-checking')
 
 test('startChecking() with interval & 200 response', function (t) {
   t.plan(2)

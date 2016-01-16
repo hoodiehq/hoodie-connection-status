@@ -3,9 +3,9 @@ module.exports = Connection
 var EventEmitter = require('events').EventEmitter
 
 var check = require('./lib/check')
-var startChecking = require('./lib/startChecking')
-var stopChecking = require('./lib/startChecking')
-var isChecking = require('./lib/startChecking')
+var startChecking = require('./lib/start-checking')
+var stopChecking = require('./lib/start-checking')
+var isChecking = require('./lib/start-checking')
 var getOk = require('./lib/get-ok')
 var on = require('./lib/on')
 var off = require('./lib/off')

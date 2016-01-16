@@ -1,6 +1,6 @@
 var test = require('tape')
 
-var stopChecking = require('../../lib/stopChecking')
+var stopChecking = require('../../lib/stop-checking')
 
 test('stopChecking() when state has interval', function (t) {
   function check () {

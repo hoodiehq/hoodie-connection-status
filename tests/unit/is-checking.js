@@ -1,6 +1,6 @@
 var test = require('tape')
 
-var isChecking = require('../../lib/isChecking')
+var isChecking = require('../../lib/is-checking')
 
 test('isChecking() when indeed checking', function (t) {
   var state = {
