@@ -46,6 +46,31 @@ test('check() with 200 response', function (t) {
     })
 })
 
+test('check() with bad state request', function (t) {
+  t.plan(2)
+
+  var emitter = new EventEmitter()
+  emitter.on('disconnect', function () {
+    t.pass('"disconnect" event emitted')
+  })
+
+  var state = {
+    method: 'HEAD',
+    url: 'http://',
+    emitter: emitter
+  }
+
+  check(state)
+
+    .then(function () {
+      t.fail('promise should reject')
+    })
+
+    .catch(function (error) {
+      t.notOk(error.code)
+    })
+})
+
 test('check() with 500 response', function (t) {
   t.plan(8)
 
