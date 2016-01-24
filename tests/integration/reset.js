@@ -81,3 +81,23 @@ test('connection.reset() resets any errors', function (t) {
     t.fail(err)
   })
 })
+
+test('connection.reset() aborts requests', function (t) {
+  t.plan(4)
+
+  var connectionStatus = new ConnectionStatus({
+    url: 'https://abort-example.com/ping'
+  })
+
+  connectionStatus.check()
+
+  .catch(function (error) {
+    t.is(error.name, 'AbortError', '.check() rejects with AbortError')
+    t.is(error.message, 'Aborted', '.check() rejects with message "Aborted"')
+    t.is(error.code, 0, '.check() rejects with code 0')
+  })
+
+  connectionStatus.reset().then(function () {
+    t.pass('reset resolves')
+  })
+})

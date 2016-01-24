@@ -61,3 +61,13 @@ test('startChecking() with interval & 500 error response', function (t) {
   simple.restore()
   clock.uninstall()
 })
+
+test('startChecking() with invalid options', function (t) {
+  t.plan(1)
+
+  var state = {}
+
+  startChecking(state)
+
+  t.notOk(state.interval, 'state.interval is not set')
+})
