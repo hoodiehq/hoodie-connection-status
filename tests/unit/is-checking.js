@@ -6,7 +6,7 @@ test('isChecking() when indeed checking', function (t) {
   var state = {
     method: 'HEAD',
     url: 'https://example.com/ping',
-    interval: 1
+    checkTimeout: 1
   }
 
   t.is(isChecking(state), true, 'is checking indeed')

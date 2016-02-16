@@ -13,8 +13,8 @@ test('parseOptions({url: "https://example.com/ping"})', function (t) {
   var options = parseOptions({ url: 'https://example.com/ping' })
   t.is(options.url, 'https://example.com/ping', 'options.url is set')
   t.is(options.method, 'HEAD', 'options.method defaults to "HEAD"')
-  t.ok(options.hasOwnProperty('interval'), 'options.interval is set')
-  t.is(options.interval, undefined, 'options.interval defaults to undefined')
+  t.ok(options.hasOwnProperty('checkTimeout'), 'options.checkTimeout is set')
+  t.is(options.checkTimeout, undefined, 'options.checkTimeout defaults to undefined')
   t.is(options.cache.prefix, 'connection_', 'options.cache defaults to { prefix: "connection_", timeout: undefined }')
   t.is(options.cache.timeout, undefined, 'options.cache defaults to { prefix: "connection_", timeout: undefined }')
 

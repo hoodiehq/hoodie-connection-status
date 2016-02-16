@@ -2,7 +2,7 @@ var test = require('tape')
 
 var stopChecking = require('../../lib/stop-checking')
 
-test('stopChecking() when state has interval', function (t) {
+test('stopChecking() when state has checkTimeout', function (t) {
   function check () {
     return
   }
@@ -10,11 +10,11 @@ test('stopChecking() when state has interval', function (t) {
   var state = {
     method: 'HEAD',
     url: 'https://example.com/ping',
-    interval: setTimeout(check, 5000, {}, {})
+    checkTimeout: setTimeout(check, 5000, {}, {})
   }
 
   stopChecking(state)
 
-  t.is(state.interval, undefined, 'timeout cleared')
+  t.is(state.checkTimeout, undefined, 'timeout cleared')
   t.end()
 })

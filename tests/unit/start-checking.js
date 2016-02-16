@@ -4,7 +4,7 @@ var test = require('tape')
 
 var startChecking = require('../../lib/start-checking')
 
-test('startChecking() with interval & 200 response', function (t) {
+test('startChecking() with checkTimeout & 200 response', function (t) {
   t.plan(2)
 
   var clock = lolex.install(0)
@@ -21,19 +21,19 @@ test('startChecking() with interval & 200 response', function (t) {
   })
 
   startChecking(state, {
-    interval: 1000
+    checkTimeout: 1000
   })
 
-  t.ok(state.interval, 'state.interval is set')
+  t.ok(state.checkTimeout, 'state.checkTimeout is set')
   clock.tick(2000)
   t.is(startChecking.internals.check.callCount, 2, '2 requests sent')
 
-  clearTimeout(state.interval)
+  clearTimeout(state.checkTimeout)
   simple.restore()
   clock.uninstall()
 })
 
-test('startChecking() with interval & 500 error response', function (t) {
+test('startChecking() with checkTimeout & 500 error response', function (t) {
   t.plan(2)
 
   var clock = lolex.install(0)
@@ -50,14 +50,14 @@ test('startChecking() with interval & 500 error response', function (t) {
   })
 
   startChecking(state, {
-    interval: 1000
+    checkTimeout: 1000
   })
 
-  t.ok(state.interval, 'state.interval is set')
+  t.ok(state.checkTimeout, 'state.checkTimeout is set')
   clock.tick(2000)
   t.is(startChecking.internals.check.callCount, 2, '2 requests sent')
 
-  clearTimeout(state.interval)
+  clearTimeout(state.checkTimeout)
   simple.restore()
   clock.uninstall()
 })
@@ -69,5 +69,5 @@ test('startChecking() with invalid options', function (t) {
 
   startChecking(state)
 
-  t.notOk(state.interval, 'state.interval is not set')
+  t.notOk(state.checkTimeout, 'state.checkTimeout is not set')
 })

@@ -28,5 +28,5 @@ test('Events', function (t) {
   serverMock.head('/ping').once().reply(200)
 
   // connect initially
-  connectionStatus.startChecking({interval: 100})
+  connectionStatus.startChecking({checkTimeout: 100})
 })
