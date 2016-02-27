@@ -79,7 +79,6 @@ new ConnectionStatus(options)
       Interval in ms while <code>connectionStatus.ok</code> is not
       <code>false</code>. If set, a request is send immediately. The
       interval starts after each request response.<br>
-      🐕 <strong>TO BE DONE</strong>: <a href="https://github.com/hoodiehq/hoodie-client-connection-status/issues/24">#24</a>
     </td>
     <td>No</td>
   </tr>
@@ -90,7 +89,6 @@ new ConnectionStatus(options)
       Interval in ms while <code>connectionStatus.ok</code> is
       <code>false</code>. If set, a request is send immediately. The
       interval starts after each request response.<br>
-      🐕 <strong>TO BE DONE</strong>: <a href="https://github.com/hoodiehq/hoodie-client-connection-status/issues/24">#24</a>
     </td>
     <td>No</td>
   </tr>
@@ -265,7 +263,6 @@ connectionStatus.startChecking(options)
     <td>
       Interval in ms while <code>connectionStatus.ok</code> is not
       <code>false</code>. The interval starts after each request response.<br>
-      🐕 <strong>TO BE DONE</strong>: <a href="https://github.com/hoodiehq/hoodie-client-connection-status/issues/24">#24</a>
     </td>
     <td>No</td>
   </tr>
@@ -275,7 +272,6 @@ connectionStatus.startChecking(options)
     <td>
       Interval in ms while <code>connectionStatus.ok</code> is
       <code>false</code>. The interval starts after each request response.<br>
-      🐕 <strong>TO BE DONE</strong>: <a href="https://github.com/hoodiehq/hoodie-client-connection-status/issues/24">#24</a>
     </td>
     <td>No</td>
   </tr>
