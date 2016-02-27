@@ -13,7 +13,8 @@ test('startChecking() with checkTimeout & 200 response', function (t) {
   var state = {
     method: 'HEAD',
     url: 'https://example.com/ping',
-    emitter: emitter
+    emitter: emitter,
+    timestamp: 'something'
   }
 
   simple.mock(startChecking.internals, 'check').callFn(function () {
@@ -21,7 +22,9 @@ test('startChecking() with checkTimeout & 200 response', function (t) {
   })
 
   startChecking(state, {
-    checkTimeout: 1000
+    interval: {
+      connected: 1000
+    }
   })
 
   t.ok(state.checkTimeout, 'state.checkTimeout is set')
@@ -42,7 +45,9 @@ test('startChecking() with checkTimeout & 500 error response', function (t) {
   var state = {
     method: 'HEAD',
     url: 'https://example.com/ping',
-    emitter: emitter
+    emitter: emitter,
+    timestamp: 'something',
+    error: 'some error'
   }
 
   simple.mock(startChecking.internals, 'check').callFn(function () {
@@ -50,11 +55,13 @@ test('startChecking() with checkTimeout & 500 error response', function (t) {
   })
 
   startChecking(state, {
-    checkTimeout: 1000
+    interval: {
+      disconnected: 3000
+    }
   })
 
   t.ok(state.checkTimeout, 'state.checkTimeout is set')
-  clock.tick(2000)
+  clock.tick(6000)
   t.is(startChecking.internals.check.callCount, 2, '2 requests sent')
 
   clearTimeout(state.checkTimeout)
