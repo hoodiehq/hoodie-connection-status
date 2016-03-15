@@ -2,7 +2,7 @@ var store = require('humble-localstorage')
 var nock = require('nock')
 var test = require('tape')
 
-var ConnectionStatus = require('../../index')
+var ConnectionStatus = require('../../client')
 
 test('Events', function (t) {
   t.plan(2)

@@ -1,15 +1,15 @@
 {
   "name": "hoodie-client-connection-status",
   "description": "log API for the browser",
-  "main": "index.js",
+  "main": "client/index.js",
   "scripts": {
     "prebuild": "rimraf dist && mkdirp dist",
-    "build": "browserify index.js --standalone=ConnectionStatus > dist/hoodie-client-connection-status.js",
+    "build": "browserify client/index.js --standalone=ConnectionStatus > dist/hoodie-client-connection-status.js",
     "postbuild": "uglifyjs dist/hoodie-client-connection-status.js -mc > dist/hoodie-client-connection-status.min.js",
     "pretest": "standard",
     "test": "npm run -s test:node | tap-spec",
     "test:node": "node tests",
-    "test:watch": "gaze 'clear && node tests | tap-min' 'tests/**/*.js' 'index.js' 'lib/**/*.js'",
+    "test:watch": "gaze 'clear && node tests | tap-min' 'tests/**/*.js' 'client/*.js' 'lib/**/*.js'",
     "test:coverage": "istanbul cover tests",
     "test:coverage:upload": "istanbul-coveralls",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"

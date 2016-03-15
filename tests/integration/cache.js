@@ -2,7 +2,7 @@ var lolex = require('lolex')
 var store = require('humble-localstorage')
 var test = require('tape')
 
-var ConnectionStatus = require('../../index')
+var ConnectionStatus = require('../../client')
 
 test('instance for example.com/ping without cached connection status', function (t) {
   var connectionStatus = new ConnectionStatus('https://example.com/ping')

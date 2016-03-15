@@ -1,7 +1,7 @@
 var store = require('humble-localstorage')
 var test = require('tape')
 
-var ConnectionStatus = require('../../index')
+var ConnectionStatus = require('../../client')
 
 test('connection.reset() resets the state', function (t) {
   t.plan(2)

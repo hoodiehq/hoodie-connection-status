@@ -2,17 +2,17 @@ module.exports = Connection
 
 var EventEmitter = require('events').EventEmitter
 
-var check = require('./lib/check')
-var startChecking = require('./lib/start-checking')
-var stopChecking = require('./lib/stop-checking')
-var isChecking = require('./lib/is-checking')
-var getOk = require('./lib/get-ok')
-var on = require('./lib/on')
-var off = require('./lib/off')
-var reset = require('./lib/reset')
+var check = require('../lib/check')
+var startChecking = require('../lib/start-checking')
+var stopChecking = require('../lib/stop-checking')
+var isChecking = require('../lib/is-checking')
+var getOk = require('../lib/get-ok')
+var on = require('../lib/on')
+var off = require('../lib/off')
+var reset = require('../lib/reset')
 
-var parseOptions = require('./lib/utils/parse-options')
-var getCache = require('./lib/utils/cache').get
+var parseOptions = require('../lib/utils/parse-options')
+var getCache = require('../lib/utils/cache').get
 
 function Connection (options) {
   var state = parseOptions(options)
