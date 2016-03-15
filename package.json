@@ -2,6 +2,7 @@
   "name": "hoodie-client-connection-status",
   "description": "log API for the browser",
   "main": "client/index.js",
+  "browser": "client/index.js",
   "scripts": {
     "prebuild": "rimraf dist && mkdirp dist",
     "build": "browserify client/index.js --standalone=ConnectionStatus > dist/hoodie-client-connection-status.js",
