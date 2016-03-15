@@ -1,5 +1,5 @@
 {
-  "name": "hoodie-client-connection-status",
+  "name": "@hoodie/connection-status",
   "description": "log API for the browser",
   "main": "client/index.js",
   "browser": "client/index.js",
@@ -52,5 +52,8 @@
     "tap-spec": "^4.1.0",
     "tape": "^4.2.2",
     "uglify-js": "^2.6.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
