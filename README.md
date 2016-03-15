@@ -1,13 +1,13 @@
-# hoodie-client-connection-status
+# hoodie-connection-status
 
 > hoodie.connectionStatus API for the browser
 
-[![Build Status](https://travis-ci.org/hoodiehq/hoodie-client-connection-status.svg?branch=master)](https://travis-ci.org/hoodiehq/hoodie-client-connection-status)
-[![Coverage Status](https://coveralls.io/repos/hoodiehq/hoodie-client-connection-status/badge.svg?branch=master)](https://coveralls.io/r/hoodiehq/hoodie-client-connection-status?branch=master)
-[![Dependency Status](https://david-dm.org/hoodiehq/hoodie-client-connection-status.svg)](https://david-dm.org/hoodiehq/hoodie-client-connection-status)
-[![devDependency Status](https://david-dm.org/hoodiehq/hoodie-client-connection-status/dev-status.svg)](https://david-dm.org/hoodiehq/hoodie-client-connection-status#info=devDependencies)
+[![Build Status](https://travis-ci.org/hoodiehq/hoodie-connection-status.svg?branch=master)](https://travis-ci.org/hoodiehq/hoodie-connection-status)
+[![Coverage Status](https://coveralls.io/repos/hoodiehq/hoodie-connection-status/badge.svg?branch=master)](https://coveralls.io/r/hoodiehq/hoodie-connection-status?branch=master)
+[![Dependency Status](https://david-dm.org/hoodiehq/hoodie-connection-status.svg)](https://david-dm.org/hoodiehq/hoodie-connection-status)
+[![devDependency Status](https://david-dm.org/hoodiehq/hoodie-connection-status/dev-status.svg)](https://david-dm.org/hoodiehq/hoodie-connection-status#info=devDependencies)
 
-`hoodie-client-connection-status` is a JavaScript library for the browser. It
+`hoodie-connection-status` is a JavaScript library for the browser. It
 allows to check a connection, and emits `disconnect` & `reconnect` events if
 the request status changes. Status is persisted in `localStorage`.
 
@@ -362,8 +362,8 @@ connectionStatus.on('reset', function () {})
 Local setup
 
 ```
-git clone git@github.com:hoodiehq/hoodie-client-connection-status.git
-cd hoodie-client-connection-status
+git clone git@github.com:hoodiehq/hoodie-connection-status.git
+cd hoodie-connection-status
 npm install
 ```
 
