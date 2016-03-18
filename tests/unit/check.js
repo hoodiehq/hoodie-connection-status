@@ -241,6 +241,36 @@ test('check() with 200 response when state.error is set', function (t) {
     })
 })
 
+test('check() with 500 response when state.error set', function (t) {
+  t.plan(2)
+
+  // mocks
+  simple.mock(check.internals.cache, 'set').callFn(function () {})
+  var error = {
+    code: 500,
+    name: 'ServerError'
+  }
+  simple.mock(check.internals, 'request').rejectWith(error)
+
+  var state = {
+    method: 'HEAD',
+    url: 'https://example.com/ping',
+    error: { name: 'FooError' }
+  }
+
+  check(state)
+
+    .catch(function () {
+      t.is(check.internals.request.callCount, 1, 'request sent')
+      t.is(state.error, error, 'adds state.error')
+    })
+
+    // cleanup mocks
+    .then(function () {
+      simple.restore()
+    })
+})
+
 test('check() will abort existing request', function (t) {
   t.plan(2)
 

@@ -32,6 +32,19 @@ test('parseOptions({})', function (t) {
   t.end()
 })
 
+test('parseOptions({ cache: { prefix: "connection_" })', function (t) {
+  var options = parseOptions({
+    url: 'https://example/ping',
+    cache: {
+      prefix: 'cool_prefix_'
+    }
+  })
+
+  t.is(options.cache.prefix, 'cool_prefix_', 'takes given prefix')
+
+  t.end()
+})
+
 test('parseOptions({url: "https://example.com/ping", interval: 30000})', function (t) {
   var intervalValue = 30000
   var options = parseOptions({
