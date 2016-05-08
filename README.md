@@ -7,9 +7,9 @@
 [![Dependency Status](https://david-dm.org/hoodiehq/hoodie-connection-status.svg)](https://david-dm.org/hoodiehq/hoodie-connection-status)
 [![devDependency Status](https://david-dm.org/hoodiehq/hoodie-connection-status/dev-status.svg)](https://david-dm.org/hoodiehq/hoodie-connection-status#info=devDependencies)
 
-`hoodie-connection-status` is a JavaScript library for the browser. It
-allows to check a connection, and emits `disconnect` & `reconnect` events if
-the request status changes. Status is persisted in `localStorage`.
+`hoodie-connection-status` is a browser library to monitor a connection status.
+It emits `disconnect` & `reconnect` events if the request status changes and
+persists its status in `localStorage`.
 
 ## Example
 
