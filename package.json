@@ -1,6 +1,6 @@
 {
   "name": "@hoodie/connection-status",
-  "description": "log API for the browser",
+  "description": "hoodie.connectionStatus API for the browser",
   "main": "client/index.js",
   "browser": "client/index.js",
   "scripts": {
