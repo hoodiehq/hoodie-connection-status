@@ -108,3 +108,35 @@ test('startChecking() with invalid options', function (t) {
 
   t.notOk(state.checkTimeout, 'state.checkTimeout is not set')
 })
+
+test('startChecking() with default interval of 30s & 200 response', function (t) {
+  t.plan(4)
+
+  var clock = lolex.install(0)
+  var emitter = {emit: function () {}}
+
+  var state = {
+    method: 'HEAD',
+    url: 'https://example.com/ping',
+    emitter: emitter,
+    timestamp: 'something'
+  }
+
+  simple.mock(startChecking.internals, 'check').callFn(function () {
+    return { then: function (success) { success() } }
+  })
+
+  startChecking(state, {})
+
+  t.ok(state.checkTimeout, 'state.checkTimeout is set')
+  clock.tick(1)
+  t.is(startChecking.internals.check.callCount, 1, '1 requests sent')
+  clock.tick(29998)
+  t.is(startChecking.internals.check.callCount, 1, '1 requests sent')
+  clock.tick(1)
+  t.is(startChecking.internals.check.callCount, 2, '2 requests sent')
+
+  clearTimeout(state.checkTimeout)
+  simple.restore()
+  clock.uninstall()
+})
