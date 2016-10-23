@@ -99,7 +99,7 @@ test('startChecking() with checkTimeout & 500 error response', function (t) {
   clock.uninstall()
 })
 
-test('startChecking() with invalid options', function (t) {
+test('startChecking() with invalid options', {skip: true}, function (t) {
   t.plan(1)
 
   var state = {}
