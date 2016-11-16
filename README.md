@@ -3,7 +3,7 @@
 > hoodie.connectionStatus API for the browser
 
 [![Build Status](https://travis-ci.org/hoodiehq/hoodie-connection-status.svg?branch=master)](https://travis-ci.org/hoodiehq/hoodie-connection-status)
-[![Coverage Status](https://coveralls.io/repos/hoodiehq/hoodie-connection-status/badge.svg?branch=master)](https://coveralls.io/r/hoodiehq/hoodie-connection-status?branch=master)
+[![Coverage Status](https://coveralls.io/repos/hoodiehq/hoodie-connection-status/badge.svg?branch=master)](https://coveralls.io/github/hoodiehq/hoodie-connection-status?branch=master)
 [![Dependency Status](https://david-dm.org/hoodiehq/hoodie-connection-status.svg)](https://david-dm.org/hoodiehq/hoodie-connection-status)
 [![devDependency Status](https://david-dm.org/hoodiehq/hoodie-connection-status/dev-status.svg)](https://david-dm.org/hoodiehq/hoodie-connection-status#info=devDependencies)
 
