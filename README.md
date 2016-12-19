@@ -26,6 +26,7 @@ myOtherRemoteApiThing.on('error', connectionStatus.check)
 
 - [Constructor](#constructor)
 - [connectionStatus.ok](#connectionstatusok)
+- [connectionStatus.isChecking](#connectionstatusischecking)
 - [connectionStatus.check()](#connectionstatuscheck)
 - [connectionStatus.startChecking()](#connectionstatusstartchecking)
 - [connectionStatus.stopChecking()](#connectionstatusstopchecking)
