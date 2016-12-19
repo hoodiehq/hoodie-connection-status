@@ -9,7 +9,7 @@
 
 `hoodie-connection-status` is a browser library to monitor a connection status.
 It emits `disconnect` & `reconnect` events if the request status changes and
-persists its status in `localStorage`.
+persists its status.
 
 ## Example
 
@@ -25,6 +25,7 @@ myOtherRemoteApiThing.on('error', connectionStatus.check)
 ## API
 
 - [Constructor](#constructor)
+- [connectionStatus.ready](#connectionstatusready)
 - [connectionStatus.ok](#connectionstatusok)
 - [connectionStatus.isChecking](#connectionstatusischecking)
 - [connectionStatus.check()](#connectionstatuscheck)
@@ -95,24 +96,18 @@ new ConnectionStatus(options)
   </tr>
   <tr>
     <th align="left">options.cache</th>
-    <td>Object or false</td>
+    <td>Object or <code>false</code></td>
     <td>
-      Defaults to <code>{ prefix: 'connection_' }</code>.
-      If set to false, nothing is persisted.
+      Object with <code>.get()</code>, <code>.set(properties)</code> and
+      <code>.unset()</code> methods to persist the connection status. Each
+      method must return a promise, <code>.get()</code> must resolve with the
+      current state or an empty object. If set to <code>false</code> the
+      connection status will not be persisted.
     </td>
-    <td>No</td>
+    <td>Defaults to a <a href="https://github.com/gr2m/async-get-set-store">localStorage-based API</a></td>
   </tr>
   <tr>
-    <th align="left">options.cache.prefix</th>
-    <td>String</td>
-    <td>
-      Defaults to <code>'connection_'</code>. will be used as the localStorage
-      key prefix, followed by <code>options.url</code>
-    </td>
-    <td>No</td>
-  </tr>
-  <tr>
-    <th align="left">options.cache.timeout</th>
+    <th align="left">options.cacheTimeout</th>
     <td>Number</td>
     <td>
       time in ms after which a cache shall be invalidated. When invalidated on
@@ -130,6 +125,12 @@ var connectionStatus = new ConnectionStatus('https://example.com/ping')
 connectionStatus.on('disconnect', showOfflineNotification)
 connectionStatus.check()
 ```
+
+### connectionStatus.ready
+
+_Read-only_
+
+Promise that resolves once the ConnectionStatus instance loaded its current state from the cache.
 
 ### connectionStatus.ok
 
@@ -153,8 +154,9 @@ _Read-only_
 connectionStatus.isChecking
 ```
 
-Returns `true` if connection is checked continuously, otherwise `false`.
-The state is persisted in cache.
+- Returns `undefined` if status not loaded yet, see [connectionStatus.ready](#connectionstatusready)
+- Returns `true` if connection is checked continuously
+- Returns `false` if connection is not checked continuously
 
 ### connectionStatus.check(options)
 
@@ -287,7 +289,7 @@ connectionStatus.startChecking(options)
   </tr>
 </table>
 
-Returns `connectionStatus` API
+Resolves without values.
 
 Example
 
@@ -304,7 +306,7 @@ Stops checking connection continuously.
 connectionStatus.stopChecking()
 ```
 
-Returns `connectionStatus` API
+Resolves without values. Does not reject.
 
 ### connectionStatus.reset(options)
 
