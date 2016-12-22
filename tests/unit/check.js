@@ -1,7 +1,6 @@
 var EventEmitter = require('events').EventEmitter
 
 var lolex = require('lolex')
-var Promise = require('lie')
 var simple = require('simple-mock')
 var test = require('tape')
 
@@ -29,6 +28,7 @@ test('check() with 200 response', function (t) {
   })
 
   var state = {
+    ready: Promise.resolve(),
     method: 'HEAD',
     url: 'https://example.com/ping'
   }
@@ -55,6 +55,7 @@ test('check() with bad state request', function (t) {
   })
 
   var state = {
+    ready: Promise.resolve(),
     method: 'HEAD',
     url: 'http://',
     emitter: emitter
@@ -92,6 +93,7 @@ test('check() with 500 response', function (t) {
   })
 
   var state = {
+    ready: Promise.resolve(),
     method: 'HEAD',
     url: 'https://example.com/ping',
     emitter: emitter
@@ -131,6 +133,7 @@ test('check() with connection error', function (t) {
   })
 
   check({
+    ready: Promise.resolve(),
     method: 'HEAD',
     url: 'https://example.com/ping',
     emitter: emitter
@@ -159,6 +162,7 @@ test('check() with POST method', function (t) {
   simple.mock(check.internals, 'request').resolveWith({})
 
   check({
+    ready: Promise.resolve(),
     method: 'POST',
     url: 'https://example.com/ping'
   })
@@ -186,6 +190,7 @@ test('check() with timeout', function (t) {
   })
 
   check({
+    ready: Promise.resolve(),
     method: 'HEAD',
     timeout: 1000,
     url: 'https://example.com/ping',
@@ -220,6 +225,7 @@ test('check() with 200 response when state.error is set', function (t) {
   })
 
   var state = {
+    ready: Promise.resolve(),
     method: 'HEAD',
     url: 'https://example.com/ping',
     error: { name: 'FooError' },
@@ -253,6 +259,7 @@ test('check() with 500 response when state.error set', function (t) {
   simple.mock(check.internals, 'request').rejectWith(error)
 
   var state = {
+    ready: Promise.resolve(),
     method: 'HEAD',
     url: 'https://example.com/ping',
     error: { name: 'FooError' }
@@ -289,6 +296,7 @@ test('check() will abort existing request', function (t) {
 
   var abortStub = simple.stub()
   var state = {
+    ready: Promise.resolve(),
     method: 'HEAD',
     url: 'https://example.com/ping',
     request: {

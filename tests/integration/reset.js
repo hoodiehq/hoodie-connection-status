@@ -1,103 +1,144 @@
-var store = require('humble-localstorage')
+var Store = require('async-get-set-store')
 var test = require('tape')
+
+var store = new Store('connection_https://example.com/ping')
 
 var ConnectionStatus = require('../../client')
 
 test('connection.reset() resets the state', function (t) {
   t.plan(2)
 
-  store.setObject('connection_https://example.com/ping', {
+  store.set({
     timestamp: new Date()
   })
 
-  var connectionStatus = new ConnectionStatus({
-    url: 'https://example.com/ping'
+  .then(function () {
+    return new ConnectionStatus({
+      url: 'https://example.com/ping'
+    }).ready
   })
 
-  t.is(connectionStatus.ok, true, 'connection status is connected')
+  .then(function (connectionStatus) {
+    t.is(connectionStatus.ok, true, 'connection status is connected')
 
-  connectionStatus.reset().then(function () {
-    t.is(connectionStatus.ok, undefined, 'connection status is disconnected')
-  }).catch(function (err) {
-    t.fail(err)
+    return connectionStatus.reset()
+
+    .then(function () {
+      t.is(connectionStatus.ok, undefined, 'connection status is disconnected')
+    })
   })
+
+  .catch(t.error)
 })
 
 test('connection.reset() resets the timestamp', function (t) {
   t.plan(3)
 
-  store.setObject('connection_https://example.com/ping', {
+  store.set({
     timestamp: new Date()
   })
 
-  var connectionStatus = new ConnectionStatus({
-    url: 'https://example.com/ping'
-  })
-
-  t.is(connectionStatus.ok, true, 'connection status is connected')
-
-  connectionStatus.reset().then(function () {
-    t.is(connectionStatus.ok, undefined, 'connection status is disconnected')
-
-    store.setObject('connection_https://example.com/ping', {
-      timestamp: new Date()
-    })
-    connectionStatus = new ConnectionStatus({
+  .then(function () {
+    return new ConnectionStatus({
       url: 'https://example.com/ping'
+    }).ready
+  })
+
+  .then(function (connectionStatus) {
+    t.is(connectionStatus.ok, true, 'connection status is connected')
+
+    return connectionStatus.reset()
+
+    .then(function () {
+      t.is(connectionStatus.ok, undefined, 'connection status is disconnected')
+
+      return store.set({
+        timestamp: new Date()
+      })
     })
 
-    t.is(connectionStatus.ok, true, 'connection status is reconnected')
-  }).catch(function (err) {
-    t.fail(err)
+    .then(function () {
+      return new ConnectionStatus({
+        url: 'https://example.com/ping'
+      }).ready
+    })
+
+    .then(function (connectionStatus) {
+      t.is(connectionStatus.ok, true, 'connection status is reconnected')
+    })
   })
+
+  .catch(t.error)
 })
 
 test('connection.reset() resets any errors', function (t) {
   t.plan(3)
 
-  store.setObject('connection_https://example.com/ping', {
+  store.set({
     error: new Error('no soup for you')
   })
 
-  var connectionStatus = new ConnectionStatus({
-    url: 'https://example.com/ping'
-  })
-
-  connectionStatus.on('reset', function () {
-    t.pass('connectionStatus "reset" event triggered')
-  })
-
-  t.is(connectionStatus.ok, undefined, 'connection status is in error')
-  connectionStatus.reset().then(function () {
-    store.setObject('connection_https://example.com/ping', {
-      timestamp: new Date()
-    })
-    connectionStatus = new ConnectionStatus({
+  .then(function () {
+    return new ConnectionStatus({
       url: 'https://example.com/ping'
+    }).ready
+  })
+
+  .then(function (connectionStatus) {
+    connectionStatus.on('reset', function () {
+      t.pass('connectionStatus "reset" event triggered')
     })
 
-    t.is(connectionStatus.ok, true, 'connection status is fine now')
-  }).catch(function (err) {
-    t.fail(err)
+    t.is(connectionStatus.ok, undefined, 'connection status is in error')
+
+    connectionStatus.reset()
+
+    .then(function () {
+      return store.set({
+        timestamp: new Date()
+      })
+    })
+
+    .then(function () {
+      return new ConnectionStatus({
+        url: 'https://example.com/ping'
+      }).ready
+    })
+
+    .then(function (connectionStatus) {
+      t.is(connectionStatus.ok, true, 'connection status is fine now')
+    })
   })
+
+  .catch(t.error)
 })
 
 test('connection.reset() aborts requests', function (t) {
   t.plan(4)
 
-  var connectionStatus = new ConnectionStatus({
-    url: 'https://abort-example.com/ping'
+  store.unset()
+
+  .then(function () {
+    return new ConnectionStatus({
+      url: 'https://abort-example.com/ping'
+    }).ready
   })
 
-  connectionStatus.check()
+  .then(function (connectionStatus) {
+    connectionStatus.check()
 
-  .catch(function (error) {
-    t.is(error.name, 'AbortError', '.check() rejects with AbortError')
-    t.is(error.message, 'Aborted', '.check() rejects with message "Aborted"')
-    t.is(error.code, 0, '.check() rejects with code 0')
-  })
+    .catch(function (error) {
+      t.is(error.name, 'AbortError', '.check() rejects with AbortError')
+      t.is(error.message, 'Aborted', '.check() rejects with message "Aborted"')
+      t.is(error.code, 0, '.check() rejects with code 0')
+    })
 
-  connectionStatus.reset().then(function () {
-    t.pass('reset resolves')
+    .catch(t.error)
+
+    connectionStatus.reset()
+
+    .then(function () {
+      t.pass('reset resolves')
+    })
   })
 })

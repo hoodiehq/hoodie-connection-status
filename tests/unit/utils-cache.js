@@ -1,54 +1,51 @@
 var test = require('tape')
 
 var cache = require('../../lib/utils/cache')
-var origStoreGetObject = cache.internals.store.getObject
-var origStoreSetObject = cache.internals.store.setObject
 
 test('cache.get({cache: false})', function (t) {
-  cache.internals.store.getObject = function () {
-    cache.internals.store.getObject = origStoreGetObject
-    t.fail('cache bypassed')
+  var state = {
+    cache: false
   }
 
-  cache.get({cache: false})
+  cache.get(state)
 
-  t.end()
-})
+  .then(function (result) {
+    t.deepEqual(result, {}, 'resolves with empty object')
 
-test('cache.get({url: "foo-url", cache: {prefix: "prfx_"}})', function (t) {
-  t.plan(3)
+    t.end()
+  })
 
-  cache.internals.store.getObject = function (key) {
-    cache.internals.store.getObject = origStoreGetObject
-    t.pass('state read from cache')
-    t.is(key, 'prfx_foo-url', 'cache key')
-    return 'funky'
-  }
-
-  var boogie = cache.get({url: 'foo-url', cache: { prefix: 'prfx_' }})
-  t.is(boogie, 'funky', 'return object from cache')
+  .catch(t.error)
 })
 
 test('cache.set({cache: false})', function (t) {
-  cache.internals.store.setObject = function () {
-    cache.internals.store.setObject = origStoreSetObject
-    t.fail('cache bypassed')
+  var state = {
+    cache: false
   }
 
-  cache.set({cache: false})
+  cache.set(state)
 
-  t.end()
+  .then(function () {
+    t.pass('resolves')
+
+    t.end()
+  })
+
+  .catch(t.error)
 })
 
-test('cache.set({timestamp: "foo", url: "foo-url", cache: {prefix: "prfx_"}})', function (t) {
-  t.plan(3)
-
-  cache.internals.store.setObject = function (key, data) {
-    cache.internals.store.setObject = origStoreSetObject
-    t.pass('state written to cache')
-    t.is(key, 'prfx_foo-url', 'cache key')
-    t.deepEqual(data, {timestamp: 'foo', error: undefined}, 'cache key')
+test('cache.unset({cache: false})', function (t) {
+  var state = {
+    cache: false
   }
 
-  cache.set({timestamp: 'foo', url: 'foo-url', cache: { prefix: 'prfx_' }})
+  cache.unset(state)
+
+  .then(function () {
+    t.pass('resolves')
+
+    t.end()
+  })
+
+  .catch(t.error)
 })
