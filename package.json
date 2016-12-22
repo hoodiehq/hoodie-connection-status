@@ -32,8 +32,8 @@
   },
   "homepage": "https://github.com/hoodiehq/hoodie-connection-status#readme",
   "dependencies": {
+    "async-get-set-store": "^1.0.1",
     "browser-supports-log-styles": "^1.1.4",
-    "lie": "^3.0.1",
     "nets": "^3.2.0"
   },
   "devDependencies": {
