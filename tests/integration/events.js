@@ -1,32 +1,37 @@
-var store = require('humble-localstorage')
 var nock = require('nock')
+var Store = require('async-get-set-store')
 var test = require('tape')
 
 var ConnectionStatus = require('../../client')
+var store = new Store('connection_https://example.com/ping')
 
 test('Events', function (t) {
   t.plan(2)
 
-  var serverMock = nock('https://example.com')
+  nock('https://example.com')
+    .head('/ping').reply(200)
+    .head('/ping').reply(500)
+    .head('/ping').reply(200)
 
-  var connectionStatus = new ConnectionStatus('https://example.com/ping')
+  store.unset()
 
-  function disconnect () {
-    t.pass('disconnect')
-  }
-  function reconnect () {
-    t.pass('reconnect')
-    connectionStatus.stopChecking()
-    store.clear()
-  }
+  .then(function () {
+    var connectionStatus = new ConnectionStatus('https://example.com/ping')
 
-  connectionStatus.on('disconnect', disconnect)
-  connectionStatus.on('reconnect', reconnect)
+    function disconnect () {
+      t.pass('disconnect')
+    }
+    function reconnect () {
+      t.pass('reconnect')
+      connectionStatus.stopChecking()
+    }
 
-  serverMock.head('/ping').once().reply(200)
-  serverMock.head('/ping').once().reply(500)
-  serverMock.head('/ping').once().reply(200)
+    connectionStatus.on('disconnect', disconnect)
+    connectionStatus.on('reconnect', reconnect)
 
-  // connect initially
-  connectionStatus.startChecking({checkTimeout: 100})
+    // connect initially
+    connectionStatus.startChecking({checkTimeout: 100})
+  })
+
+  .catch(t.error)
 })

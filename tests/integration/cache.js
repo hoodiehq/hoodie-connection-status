@@ -1,25 +1,38 @@
 var lolex = require('lolex')
-var store = require('humble-localstorage')
+var Store = require('async-get-set-store')
 var test = require('tape')
 
 var ConnectionStatus = require('../../client')
+var store = new Store('connection_https://example.com/ping')
 
 test('instance for example.com/ping without cached connection status', function (t) {
-  var connectionStatus = new ConnectionStatus('https://example.com/ping')
-  t.is(connectionStatus.ok, undefined, 'connection status is undefined')
+  store.unset()
 
-  t.end()
+  .then(function () {
+    return new ConnectionStatus('https://example.com/ping').ready
+  })
+
+  .then(function (connectionStatus) {
+    t.is(connectionStatus.ok, undefined, 'connection status is undefined')
+
+    t.end()
+  })
 })
 
 test('instance for example.com/ping with cached connection status', function (t) {
-  store.setObject('connection_https://example.com/ping', {
+  store.set({
     timestamp: new Date()
   })
-  var connectionStatus = new ConnectionStatus('https://example.com/ping')
-  t.is(connectionStatus.ok, true, 'connection status read from cache')
-  store.clear()
 
-  t.end()
+  .then(function () {
+    return new ConnectionStatus('https://example.com/ping').ready
+  })
+
+  .then(function (connectionStatus) {
+    t.is(connectionStatus.ok, true, 'connection status read from cache')
+
+    t.end()
+  })
 })
 
 test('instance for example.com/ping with outdated cached connection status', function (t) {
@@ -28,22 +41,25 @@ test('instance for example.com/ping with outdated cached connection status', fun
   var clock = lolex.install(0)
   var oneDayInMs = 86400000
 
-  store.setObject('connection_https://example.com/ping', {
+  store.set({
     timestamp: new Date()
   })
-  clock.tick(oneDayInMs)
 
-  var connectionStatus = new ConnectionStatus({
-    url: 'https://example.com/ping',
-    cache: {
-      timeout: oneDayInMs
-    }
-  })
-  t.is(connectionStatus.ok, undefined, 'connection status not read from outdated cache')
-  connectionStatus.on('reset', function () {
-    t.pass('"reset" event triggered')
+  .then(function () {
+    clock.tick(oneDayInMs + 1)
+
+    return new ConnectionStatus({
+      url: 'https://example.com/ping',
+      cacheTimeout: oneDayInMs
+    }).ready
   })
 
-  store.clear()
-  clock.uninstall()
+  .then(function (connectionStatus) {
+    t.is(connectionStatus.ok, undefined, 'connection status not read from outdated cache')
+    connectionStatus.on('reset', function () {
+      t.pass('"reset" event triggered')
+    })
+
+    clock.uninstall()
+  })
 })

@@ -8,6 +8,7 @@ test('stopChecking() when state has checkTimeout', function (t) {
   }
 
   var state = {
+    ready: Promise.resolve(),
     method: 'HEAD',
     url: 'https://example.com/ping',
     checkTimeout: setTimeout(check, 5000, {}, {})
@@ -15,6 +16,10 @@ test('stopChecking() when state has checkTimeout', function (t) {
 
   stopChecking(state)
 
-  t.is(state.checkTimeout, undefined, 'timeout cleared')
-  t.end()
+  .then(function () {
+    t.is(state.checkTimeout, undefined, 'timeout cleared')
+    t.end()
+  })
+
+  .catch(t.error)
 })

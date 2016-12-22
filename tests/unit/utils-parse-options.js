@@ -1,3 +1,4 @@
+var simple = require('simple-mock')
 var test = require('tape')
 
 var parseOptions = require('../../lib/utils/parse-options')
@@ -19,8 +20,7 @@ test('parseOptions({url: "https://example.com/ping"})', function (t) {
   t.is(options.method, 'HEAD', 'options.method defaults to "HEAD"')
   t.ok(options.hasOwnProperty('checkTimeout'), 'options.checkTimeout is set')
   t.is(options.checkTimeout, undefined, 'options.checkTimeout defaults to undefined')
-  t.is(options.cache.prefix, 'connection_', 'options.cache defaults to { prefix: "connection_", timeout: undefined }')
-  t.is(options.cache.timeout, undefined, 'options.cache defaults to { prefix: "connection_", timeout: undefined }')
+  t.is(options.cacheTimeout, 7200000, 'options.cacheTimeout defaults to 2h in ms')
   t.isEquivalent(options.interval, initialInterval, 'option.interval defaults to { interval: { connected, disconnected } }')
 
   t.end()
@@ -28,19 +28,6 @@ test('parseOptions({url: "https://example.com/ping"})', function (t) {
 
 test('parseOptions({})', function (t) {
   t.throws(parseOptions.bind(null, {}), 'throws if options invalid')
-
-  t.end()
-})
-
-test('parseOptions({ cache: { prefix: "connection_" })', function (t) {
-  var options = parseOptions({
-    url: 'https://example/ping',
-    cache: {
-      prefix: 'cool_prefix_'
-    }
-  })
-
-  t.is(options.cache.prefix, 'cool_prefix_', 'takes given prefix')
 
   t.end()
 })
@@ -62,4 +49,36 @@ test('parseOptions({url: "https://example.com/ping", interval: 30000})', functio
   t.isEquivalent(options.interval, returnedOptions.interval, 'option.interval is converted from number to object')
 
   t.end()
+})
+
+test('parseOptions({url: "https://example.com/ping", cache: storeApi})', function (t) {
+  var options = {
+    url: 'https://example.com/ping',
+    cache: {
+      get: simple.stub().resolveWith({})
+    }
+  }
+  var state = parseOptions(options)
+
+  state.ready.then(function () {
+    t.is(options.cache.get.callCount, 1)
+    t.end()
+  })
+
+  .catch(t.error)
+})
+
+test('parseOptions with setup error', function (t) {
+  var options = {
+    url: 'https://example.com/ping',
+    cache: {
+      get: simple.stub().rejectWith(new Error('ooops'))
+    }
+  }
+  var state = parseOptions(options)
+
+  state.ready.catch(function () {
+    t.is(options.cache.get.callCount, 1)
+    t.end()
+  })
 })

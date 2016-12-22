@@ -1,5 +1,5 @@
 require('./cache')
+require('./constructor')
 require('./events')
-require('./instance')
 require('./reset')
 require('./walkthrough')
