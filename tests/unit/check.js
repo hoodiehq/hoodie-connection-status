@@ -11,7 +11,7 @@ test('check() with 200 response', function (t) {
 
   // mocks
   var clock = lolex.install(0)
-  simple.mock(check.internals.cache, 'set').callFn(function (state, error) {
+  simple.mock(check.internals.cache, 'set').callFn(function (state) {
     t.pass('sets cache')
     t.is(state.url, 'https://example.com/ping', 'passes state to cache')
     t.is(arguments.length, 1, 'passes no error')
@@ -77,10 +77,11 @@ test('check() with 500 response', function (t) {
 
   // mocks
   var clock = lolex.install(0)
-  simple.mock(check.internals.cache, 'set').callFn(function (state, error) {
+  simple.mock(check.internals.cache, 'set').callFn(function (state) {
     t.pass('sets cache')
     t.is(state.url, 'https://example.com/ping', 'passes state to cache')
-    t.is(error.name, 'ServerError', 'passes error')
+    t.is(state.error.name, 'ServerError', 'passes error')
+    return Promise.resolve()
   })
   simple.mock(check.internals, 'request').rejectWith({
     name: 'ServerError',
@@ -98,6 +99,7 @@ test('check() with 500 response', function (t) {
     url: 'https://example.com/ping',
     emitter: emitter
   }
+
   check(state)
 
     .then(function () {
@@ -123,10 +125,10 @@ test('check() with connection error', function (t) {
 
   // mocks
   var emitter = {emit: function () {}}
-  simple.mock(check.internals.cache, 'set').callFn(function (state, error) {
+  simple.mock(check.internals.cache, 'set').callFn(function (state) {
     t.pass('sets cache')
     t.is(state.url, 'https://example.com/ping', 'passes state to cache')
-    t.is(error.name, 'ConnectionError', 'passes error to cache')
+    t.is(state.error.name, 'ConnectionError', 'passes error to cache')
   })
   simple.mock(check.internals, 'request').rejectWith({
     name: 'ConnectionError'
@@ -254,7 +256,8 @@ test('check() with 500 response when state.error set', function (t) {
   simple.mock(check.internals.cache, 'set').callFn(function () {})
   var error = {
     code: 500,
-    name: 'ServerError'
+    name: 'ServerError',
+    message: 'ooops'
   }
   simple.mock(check.internals, 'request').rejectWith(error)
 
@@ -269,7 +272,7 @@ test('check() with 500 response when state.error set', function (t) {
 
     .catch(function () {
       t.is(check.internals.request.callCount, 1, 'request sent')
-      t.is(state.error, error, 'adds state.error')
+      t.same(state.error, error, 'adds state.error')
     })
 
     // cleanup mocks
