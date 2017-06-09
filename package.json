@@ -34,7 +34,8 @@
   "dependencies": {
     "async-get-set-store": "^1.0.1",
     "browser-supports-log-styles": "^1.1.4",
-    "nets": "^3.2.0"
+    "nets": "^3.2.0",
+    "next-tick": "^1.0.0"
   },
   "devDependencies": {
     "browserify": "^13.0.0",
