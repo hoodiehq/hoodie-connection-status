@@ -4,7 +4,7 @@ var stopChecking = require('../../lib/stop-checking')
 
 test('stopChecking() when state has checkTimeout', function (t) {
   function check () {
-    return
+
   }
 
   var state = {
